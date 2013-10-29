@@ -1,3 +1,13 @@
 language: scala
 scala:
   - 2.10.3
+branches:
+  only:
+    - master
+notifications:
+  email:
+    recipients:
+      - ed@parascal.com
+jdk:
+  - openjdk7
+  - oraclejdk7
