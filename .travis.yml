@@ -1,13 +1,17 @@
 language: scala
 scala:
-  - 2.10.3
+- 2.10.3
 branches:
   only:
-    - master
+  - master
 notifications:
   email:
     recipients:
-      - ed@parascal.com
+    - ed@parascal.com
 jdk:
-  - openjdk7
-  - oraclejdk7
+- openjdk7
+- oraclejdk7
+env:
+  global:
+  - secure: JyjJEdLreQ6bsdAwLC1HN1G1yTxBZQQIzbUc1Gd1fEKG5J0DAvstMG2O45HUwxugauyYci8O8ZLlE3HRfTIwIhUa0pZrJifPVBP6mndlVImz6pWwIzYGxKoe3i+DSf9f3jujjvuDjRPr8BhJTWmCIdjYh2UnU40CsrQbmYDmR2Y=
+  - secure: U7pY23l4985nWb5zUQDeK+wOEz38kPI9KiKYFfRsUxRoaPMLECU2SMIHYaBTfL7PcIIkok/wzWYt24lLx5fKhmndkS9/KcBSy82WDrKAjoxzSoNYI/+Vp/PRHHgbFvxV/d/2jDFifHw/h/0YyWdfbo3LjLEjf1ZTiO7Z0aO0r4E=

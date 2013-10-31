@@ -9,7 +9,7 @@ import org.json4s._
 import org.json4s.native.JsonMethods._
 
 object DigitalOcean {
-  def create(clientId: String, apiKey: String): DigitalOcean = 
+  def apply(clientId: String, apiKey: String): DigitalOcean = 
     new DigitalOceanImpl(clientId, apiKey)
 }
 
@@ -70,7 +70,7 @@ protected class DigitalOceanImpl(
     if(status == "OK") {
       handler(json)
     } else {
-      throw new Exception(s"Status Not OK: $status")
+      throw DigitalOceanException(s"Status Not OK: $status")
     }
   }
 }
