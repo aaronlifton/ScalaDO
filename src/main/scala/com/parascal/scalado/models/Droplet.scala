@@ -1,6 +1,4 @@
-package com.parascal.scalado
-
-import org.joda.time.DateTime
+package com.parascal.scalado.models
 
 case class Droplet(
   val id: Long,
