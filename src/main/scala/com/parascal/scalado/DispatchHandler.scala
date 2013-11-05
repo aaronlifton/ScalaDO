@@ -4,13 +4,11 @@ import dispatch._
 import org.json4s.JsonAST.JValue
 import scala.concurrent.ExecutionContext
 
-class DispatchHandler(
+protected class DispatchHandler(
     val clientId: String,
     val apiKey: String,
     val apiHost: String = "api.digitalocean.com"
-)(
-  implicit val executionContext: ExecutionContext = ExecutionContext.Implicits.global
-){
+)(implicit val executionContext: ExecutionContext){
   
   private val initReq = host(apiHost).secure
   private val defaultParams = Map("client_id" -> clientId, "api_key" -> apiKey)

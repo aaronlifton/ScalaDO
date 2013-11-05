@@ -11,8 +11,11 @@ import org.json4s.native.JsonMethods._
 import com.parascal.scalado.DispatchHandler
 
 object DropletApi {
-  def apply(clientId: String, apiKey: String): DropletApi = 
-    new DispatchDropletApi(new DispatchHandler(clientId, apiKey))
+  def apply(clientId: String, apiKey: String)
+  (
+    implicit executionContext: ExecutionContext = ExecutionContext.Implicits.global,
+    jsonFormats: Formats = DefaultFormats
+  ): DropletApi = new DispatchDropletApi(new DispatchHandler(clientId, apiKey))
 }
 
 trait DropletApi {
@@ -21,14 +24,18 @@ trait DropletApi {
     name: String, sizeId: Int, imageId: Long, regionId: Int, 
     sshKeyIds: Seq[Long] = Seq[Long](), privateNetworking: Boolean = false
   ): Future[NewDroplet]
+  def destroyDroplet(
+    dropletId: Long
+  ): Future[Long]
 }
 
 protected class DispatchDropletApi(
-  val dh: DispatchHandler 
+  dh: DispatchHandler 
 )(
-  implicit val executionContext: ExecutionContext = ExecutionContext.Implicits.global,
-  implicit val jsonFormats: Formats = DefaultFormats
-) extends DropletApi {
+  implicit thisExecutionContext: ExecutionContext, jsonFormats: Formats = DefaultFormats
+) extends BaseApi with DropletApi {
+  
+  override implicit protected val executionContext = thisExecutionContext
 
   override def droplets: Future[Seq[Droplet]] = handleReturnJson(dh.get(_ / "droplets")) { json =>
     (for{
@@ -64,13 +71,14 @@ protected class DispatchDropletApi(
     }
   }
   
-  private def handleReturnJson[T](jsonFuture: Future[JValue])
-  (handler: JValue => T): Future[T] = for(json <- jsonFuture) yield {
-    val status = (json \ "status").values
-    if(status == "OK") {
-      handler(json)
-    } else {
-      throw DigitalOceanException(s"Status Not OK: $status")
-    }
+  override def destroyDroplet(dropletId: Long): Future[Long] = {
+    handleReturnJson(dh.get(_ / "droplets" / dropletId / "destroy")) { json =>
+      (for {
+        JObject(result) <- json
+        JField("event_id", JInt(eventId)) <- result
+      } yield { eventId.toLong }).head
+    } 
   }
+  
+  
 }
